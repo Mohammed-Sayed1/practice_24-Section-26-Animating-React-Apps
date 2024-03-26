@@ -1,6 +1,7 @@
-import { useContext } from 'react';
+import { AnimatePresence, motion } from "framer-motion";
+import { useContext } from "react";
 
-import { ChallengesContext } from '../store/challenges-context.jsx';
+import { ChallengesContext } from "../store/challenges-context.jsx";
 
 export default function ChallengeItem({
   challenge,
@@ -10,24 +11,25 @@ export default function ChallengeItem({
   const { updateChallengeStatus } = useContext(ChallengesContext);
 
   const formattedDate = new Date(challenge.deadline).toLocaleDateString(
-    'en-US',
+    "en-US",
     {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
     }
   );
 
   function handleCancel() {
-    updateChallengeStatus(challenge.id, 'failed');
+    updateChallengeStatus(challenge.id, "failed");
   }
 
   function handleComplete() {
-    updateChallengeStatus(challenge.id, 'completed');
+    updateChallengeStatus(challenge.id, "completed");
   }
 
   return (
-    <li>
+    //* layout: is a framer motion property to add a default animation to the element while its position or size change
+    <motion.li layout exit={{ y: -30, opacity: 0 }}>
       <article className="challenge-item">
         <header>
           <img {...challenge.image} />
@@ -42,23 +44,34 @@ export default function ChallengeItem({
             </p>
           </div>
         </header>
-        <div className={`challenge-item-details ${isExpanded ? 'expanded' : ''}`}>
+        <div className="challenge-item-details">
           <p>
             <button onClick={onViewDetails}>
-              View Details{' '}
-              <span className="challenge-item-details-icon">&#9650;</span>
+              View Details{" "}
+              <motion.span
+                animate={{ rotate: isExpanded ? 180 : 0 }}
+                className="challenge-item-details-icon"
+              >
+                &#9650;
+              </motion.span>
             </button>
           </p>
 
-          {isExpanded && (
-            <div>
-              <p className="challenge-item-description">
-                {challenge.description}
-              </p>
-            </div>
-          )}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+              >
+                <p className="challenge-item-description">
+                  {challenge.description}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </article>
-    </li>
+    </motion.li>
   );
 }

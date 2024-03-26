@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
-import NewChallenge from './NewChallenge.jsx';
+import NewChallenge from "./NewChallenge.jsx";
 
 export default function Header() {
   const [isCreatingNewChallenge, setIsCreatingNewChallenge] = useState();
@@ -15,13 +16,21 @@ export default function Header() {
 
   return (
     <>
-      {isCreatingNewChallenge && <NewChallenge onDone={handleDone} />}
+      {/* use AnimatePresence as a wrapper for the component wanna add an exit animation to it */}
+      <AnimatePresence>
+        {isCreatingNewChallenge && <NewChallenge onDone={handleDone} />}
+      </AnimatePresence>
 
       <header id="main-header">
         <h1>Your Challenges</h1>
-        <button onClick={handleStartAddNewChallenge} className="button">
+        <motion.button
+          whileHover={{ scale: 1.1 }} //* use while to handle the animation for some events
+          transition={{ type: "spring", stiffness: 500}} //* stiffness and mass are properties working with type: 'spring' property
+          onClick={handleStartAddNewChallenge}
+          className="button"
+        >
           Add Challenge
-        </button>
+        </motion.button>
       </header>
     </>
   );

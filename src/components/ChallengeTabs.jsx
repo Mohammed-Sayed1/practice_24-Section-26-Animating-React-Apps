@@ -1,3 +1,4 @@
+import {motion} from 'framer-motion'
 import Badge from './Badge.jsx';
 
 function Tab({ isSelected, onSelect, badgeCaption, children }) {
@@ -8,9 +9,11 @@ function Tab({ isSelected, onSelect, badgeCaption, children }) {
         onClick={onSelect}
       >
         {children}
-        <Badge caption={badgeCaption}></Badge>
+        {/* by adding this key={badgeCaption} to a component that uses framer motion elements, it will asign a dynamic key for the component and this will recreate and rerender this component and rerun any animations inside it */}
+        <Badge key={badgeCaption} caption={badgeCaption}></Badge>
       </button>
-      {isSelected && <div className="active-tab-indicator" />}
+      {/* by adding layoutId='tab-indicator' to this div which represents the under tab line framer motion will add a smooth animation for all elements with this layoutId */}
+      {isSelected && <motion.div layoutId='tab-indicator' className="active-tab-indicator" />}
     </li>
   );
 }
